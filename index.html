@@ -1,0 +1,860 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ARCHIVO // IJ-0822</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #070707;
+    color: #c8c8c8;
+    font-family: "Courier New", monospace;
+    overflow-x: hidden;
+}
+
+/* =========================
+   CRT / INTERFERENCIA
+   ========================= */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.025) 0px,
+        rgba(255,255,255,0.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 101;
+    background: radial-gradient(
+        ellipse at center,
+        transparent 45%,
+        rgba(0,0,0,0.7) 100%
+    );
+}
+
+.page {
+    width: min(900px, 90%);
+    margin: 60px auto;
+    padding: 45px;
+    background: #101010;
+    border: 1px solid #414141;
+    box-shadow: 0 0 50px rgba(0,0,0,.9);
+    position: relative;
+}
+
+.stamp {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    border: 2px solid #733;
+    color: #733;
+    padding: 7px 15px;
+    transform: rotate(-8deg);
+    font-weight: bold;
+    opacity: .65;
+}
+
+.header {
+    border-bottom: 1px solid #444;
+    padding-bottom: 25px;
+}
+
+.classification {
+    color: #a84444;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+h1 {
+    text-align: center;
+    letter-spacing: 5px;
+    font-size: 25px;
+    margin: 20px 0;
+}
+
+h2 {
+    font-size: 16px;
+    letter-spacing: 2px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 8px;
+    margin-top: 40px;
+}
+
+p {
+    line-height: 1.75;
+}
+
+.metadata {
+    display: grid;
+    grid-template-columns: 190px 1fr;
+    gap: 9px;
+    font-size: 13px;
+}
+
+.red {
+    color: #a94b4b;
+}
+
+.censored {
+    background: #050505;
+    color: #050505;
+    padding: 0 5px;
+}
+
+/* =========================
+   AI IJICHI
+   ========================= */
+
+.subject-container {
+    margin: 25px 0;
+}
+
+.subject-label {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.subject {
+    position: relative;
+    display: inline-block;
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #ddd;
+}
+
+/*
+    El nombre parece sufrir una interferencia.
+*/
+
+.subject::before,
+.subject::after {
+    content: "AI IJICHI";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    opacity: 0;
+}
+
+.subject::before {
+    color: #8aaa8a;
+    animation: glitchGreen 6s infinite;
+}
+
+.subject::after {
+    color: #a66;
+    animation: glitchRed 6s infinite;
+}
+
+@keyframes glitchGreen {
+
+    0%, 67%, 100% {
+        opacity: 0;
+        transform: none;
+    }
+
+    68% {
+        opacity: .9;
+        transform: translate(-4px,-2px);
+        clip-path: inset(0 0 65% 0);
+    }
+
+    69% {
+        opacity: .8;
+        transform: translate(3px,1px);
+        clip-path: inset(30% 0 40% 0);
+    }
+
+    70% {
+        opacity: 0;
+    }
+}
+
+@keyframes glitchRed {
+
+    0%, 79%, 100% {
+        opacity: 0;
+        transform: none;
+    }
+
+    80% {
+        opacity: .8;
+        transform: translate(4px,2px);
+        clip-path: inset(60% 0 5% 0);
+    }
+
+    81% {
+        opacity: .7;
+        transform: translate(-3px,0);
+        clip-path: inset(40% 0 35% 0);
+    }
+
+    82% {
+        opacity: 0;
+    }
+}
+
+/* =========================
+   WARNING
+   ========================= */
+
+.warning {
+    border: 1px solid #633;
+    padding: 17px;
+    margin: 30px 0;
+    color: #a66;
+    text-align: center;
+    animation: warningPulse 4s infinite;
+}
+
+@keyframes warningPulse {
+
+    0%, 90%, 100% {
+        opacity: 1;
+    }
+
+    94% {
+        opacity: .25;
+    }
+}
+
+/* =========================
+   TIMELINE
+   ========================= */
+
+.timeline {
+    border-left: 1px solid #444;
+    margin: 25px 0;
+    padding-left: 25px;
+}
+
+.event {
+    margin-bottom: 25px;
+}
+
+.date {
+    color: #999;
+    font-weight: bold;
+}
+
+.event-danger {
+    color: #a95a5a;
+}
+
+/* =========================
+   TERMINAL
+   ========================= */
+
+.terminal {
+    background: #050505;
+    border: 1px solid #292929;
+    padding: 20px;
+    margin-top: 30px;
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.green {
+    color: #779977;
+}
+
+.redtext {
+    color: #9d5555;
+}
+
+.dim {
+    color: #555;
+}
+
+/* =========================
+   CORRUPTED TEXT
+   ========================= */
+
+.corrupted {
+    animation: corruption 8s infinite;
+}
+
+@keyframes corruption {
+
+    0%, 91%, 100% {
+        opacity: 1;
+    }
+
+    92% {
+        opacity: .2;
+        transform: translateX(3px);
+    }
+
+    93% {
+        opacity: .8;
+        transform: translateX(-4px);
+    }
+
+    94% {
+        opacity: .25;
+    }
+}
+
+/* =========================
+   SECRET
+   ========================= */
+
+.hidden {
+    color: #101010;
+    user-select: none;
+}
+
+.hidden:hover {
+    color: #555;
+}
+
+.footer {
+    margin-top: 55px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+    text-align: center;
+    color: #444;
+    font-size: 10px;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+<div class="stamp">
+    RESTRINGIDO
+</div>
+
+
+<div class="header">
+
+    <div class="classification">
+        [ ARCHIVO CLASIFICADO ]
+    </div>
+
+    <h1>
+        INVESTIGACIÓN FAMILIAR
+    </h1>
+
+    <div class="metadata">
+
+        <div>EXPEDIENTE</div>
+        <div>IJ-0822-18</div>
+
+        <div>FECHA</div>
+        <div class="red">22 / 08 / 2018</div>
+
+        <div>FAMILIA</div>
+        <div>IJICHI</div>
+
+        <div>UBICACIÓN</div>
+        <div>DOMICILIO FAMILIAR</div>
+
+        <div>ESTADO</div>
+        <div class="red">INCIDENTE CONFIRMADO</div>
+
+    </div>
+
+</div>
+
+
+<div class="warning">
+
+    ⚠ ADVERTENCIA ⚠<br><br>
+
+    El siguiente informe contiene información relacionada
+    con un incidente de naturaleza anómala.
+
+</div>
+
+
+<h2>
+    01 // MOTIVO DE LA INVESTIGACIÓN
+</h2>
+
+<p>
+    La investigación fue ordenada tras la identificación de
+    irregularidades relacionadas con la estudiante y hechicera
+    registrada como:
+</p>
+
+
+<div class="subject-container">
+
+    <div class="subject-label">
+        IDENTIFICACIÓN DEL SUJETO
+    </div>
+
+    <div class="subject">
+        AI IJICHI
+    </div>
+
+</div>
+
+
+<p>
+
+    Se solicitó verificar el estado de su domicilio familiar
+    debido a la ausencia recurrente de la estudiante durante
+    períodos no registrados en su agenda oficial.
+
+</p>
+
+<p>
+
+    Según declaraciones previas, la estudiante mantenía
+    comunicación frecuente con un familiar de edad avanzada,
+    identificado como su abuela.
+
+</p>
+
+
+<h2>
+    02 // ANTECEDENTES
+</h2>
+
+<p>
+
+    El incidente de Sendai Jujutsu High provocó la evacuación
+    completa de las instalaciones y la posterior suspensión
+    de operaciones de la institución.
+
+</p>
+
+<p>
+
+    Durante dicho incidente, la estudiante
+    <span class="corrupted">Ai Ijichi</span>
+    enfrentó directamente al atacante identificado como
+    <strong>Daiki Gondou</strong>.
+
+</p>
+
+<p>
+
+    Los registros médicos posteriores indican que la estudiante
+    permaneció inconsciente durante aproximadamente
+    <strong>dos semanas</strong> antes de recuperar la conciencia.
+
+</p>
+
+<p>
+
+    Tras la pérdida de las instalaciones de Sendai,
+    fue posteriormente trasladada a Tokyo Jujutsu High.
+
+</p>
+
+
+<h2>
+    03 // CRONOLOGÍA
+</h2>
+
+
+<div class="timeline">
+
+    <div class="event">
+
+        <div class="date">
+            [ FECHA DEL INCIDENTE ]
+        </div>
+
+        <p class="event-danger">
+            ATAQUE A SENDAI JUJUTSU HIGH
+        </p>
+
+        <p>
+            Se confirma la participación de Daiki Gondou.
+            Las instalaciones quedan inutilizadas.
+        </p>
+
+    </div>
+
+
+    <div class="event">
+
+        <div class="date">
+            [ + 14 DÍAS ]
+        </div>
+
+        <p>
+            La estudiante identificada como Ai Ijichi
+            recupera la conciencia.
+        </p>
+
+        <p>
+            No se detectan alteraciones físicas significativas fuera 
+            de distintas cicatrices alrededor de cuerpo y cabeza.
+        </p>
+
+    </div>
+
+
+    <div class="event">
+
+        <div class="date">
+            [ POSTERIOR ]
+        </div>
+
+        <p>
+            Traslado de la estudiante a Tokyo Jujutsu High.
+        </p>
+
+    </div>
+
+
+    <div class="event">
+
+        <div class="date">
+            22 / 08 / 2018
+        </div>
+
+        <p class="event-danger">
+            INVESTIGACIÓN DEL DOMICILIO IJICHI
+        </p>
+
+    </div>
+
+</div>
+
+
+<h2>
+    04 // HALLAZGOS
+</h2>
+
+<p>
+
+    El equipo de investigación ingresó al domicilio familiar
+    durante la mañana del 22 de agosto.
+
+</p>
+
+<p>
+
+    Los tres residentes fueron encontrados sentados
+    en la sala principal.
+
+</p>
+
+<p>
+
+    <strong>
+        Los tres cuerpos presentaban un avanzado estado
+        de momificación.
+    </strong>
+
+</p>
+
+<p>
+
+    La estimación preliminar establece que las muertes
+    ocurrieron aproximadamente en el mismo período que
+    el ataque contra Sendai Jujutsu High.
+
+</p>
+
+
+<div class="terminal">
+
+    <div class="green">
+        &gt; INITIALIZING FORENSIC ARCHIVE...
+    </div>
+
+    <br>
+
+    &gt; LOCATION: IJICHI RESIDENCE<br>
+    &gt; DATE: 22/08/2018<br>
+
+    <br>
+
+    &gt; SUBJECTS FOUND: 3<br>
+
+    &gt; STATUS: DECEASED<br>
+
+    <br>
+
+    <span class="redtext">
+        &gt; ESTIMATED TIME OF DEATH:
+        CONSISTENT WITH SENDAI INCIDENT
+    </span>
+
+    <br><br>
+
+    <span class="redtext">
+        &gt; WARNING: NO EXTERNAL ENTRY DETECTED
+    </span>
+
+    <br><br>
+
+    &gt; FAMILY RECORD: IJICHI<br>
+
+    <span class="dim">
+        &gt; MOTHER........... DECEASED<br>
+        &gt; FATHER........... DECEASED<br>
+        &gt; GRANDMOTHER...... DECEASED
+    </span>
+
+    <br><br>
+
+    <span class="redtext">
+        &gt; QUESTION:
+        DOES THE SUBJECT KNOW?
+    </span>
+
+</div>
+
+
+<h2>
+    05 // INCONSISTENCIAS
+</h2>
+
+<p>
+
+    No se encontraron signos claros de entrada forzada
+    en el domicilio.
+
+</p>
+
+<p>
+
+    Tampoco se encontró evidencia concluyente que explique
+    por qué los cuerpos permanecieron sin ser descubiertos
+    durante el período indicado.
+
+</p>
+
+<p>
+
+    Resulta particularmente irregular que la estudiante
+    continuara refiriéndose a su abuela en tiempo presente
+    después de la fecha estimada de fallecimiento.
+
+</p>
+
+<p>
+
+    <span class="corrupted">
+        La estudiante no pudo haber recibido respuesta
+        de su abuela.
+    </span>
+
+</p>
+
+
+<h2>
+    06 // OBSERVACIÓN DEL INVESTIGADOR
+</h2>
+
+<p>
+
+    La investigación inicialmente fue considerada un caso
+    aislado de homicidio relacionado con el incidente de Sendai.
+
+</p>
+
+<p>
+
+    Sin embargo, existe una anomalía resaltada por la directora
+    de Kyoto Jujutsu High.
+
+</p>
+
+<p>
+
+    La información disponible sobre la estudiante en los informes
+    psicologicos redactados desde el 7 de Abril indican
+    que su comportamiento posterior al incidente no coincide
+    completamente con sus registros anteriores.
+
+</p>
+
+<p>
+
+    No se considera suficiente para iniciar una investigación
+    independiente.
+
+</p>
+
+
+<div class="terminal">
+
+    <div class="green">
+        &gt; COMPARING RECORDS...
+    </div>
+
+    <br>
+
+    &gt; AI IJICHI / PRE-INCIDENT<br>
+    &gt; AI IJICHI / POST-INCIDENT<br>
+
+    <br>
+
+    <span class="redtext">
+        &gt; MATCH: 97.4%
+    </span>
+
+    <br><br>
+
+    <span class="redtext">
+        &gt; DISCREPANCY DETECTED
+    </span>
+
+    <br><br>
+
+    &gt; RECHECKING IDENTITY...
+
+    <br><br>
+
+    <span class="hidden">
+        &gt; IDENTITY DOES NOT MATCH
+        // NYOIRIN
+        // █████████
+        // HOST COMPATIBILITY CONFIRMED
+    </span>
+
+</div>
+
+
+<h2>
+    07 // ESTADO DEL EXPEDIENTE
+</h2>
+
+<p>
+
+    Debido a la ausencia de pruebas suficientes,
+    el expediente queda temporalmente archivado.
+
+</p>
+
+<p>
+
+    Se recomienda mantener vigilancia discreta sobre
+    <span class="corrupted">Ai Ijichi</span>.
+
+</p>
+
+<p>
+
+    No informar a la estudiante sobre el descubrimiento
+    de los cuerpos hasta completar la investigación.
+
+</p>
+
+
+<div class="warning">
+
+    EXPEDIENTE CERRADO
+
+    <br><br>
+
+    <span class="red">
+        NO REABRIR SIN AUTORIZACIÓN DE LOS ALTOS MANDOS
+    </span>
+
+</div>
+
+
+<div class="footer">
+
+    ARCHIVO CENTRAL DE JUJUTSU<br>
+    REGISTRO IJ-0822-18<br><br>
+
+    DOCUMENTO DIGITALIZADO — INTEGRIDAD DEL ARCHIVO: 91.7%
+
+    <br><br>
+
+    ███████████████████████████████
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/*
+==================================================
+ARCHIVO INTERNO
+==================================================
+
+Este contenido NO forma parte del informe visible.
+
+Si estás leyendo esto, has inspeccionado
+el código fuente.
+
+La información que aparece aquí no debería existir.
+
+==================================================
+*/
+
+console.log("%cARCHIVO IJ-0822-18", "color:#a44;font-size:20px;font-weight:bold");
+
+console.log("22/08/2018");
+
+console.log("AI IJICHI");
+
+console.log("DAIKI GONDOU");
+
+console.log("SENDai Jujutsu High");
+
+console.log("ERROR: IDENTITY RECORD DUPLICATED");
+
+console.log("ERROR: ORIGINAL RECORD UNAVAILABLE");
+
+/*
+    NOTA:
+    El siguiente término fue eliminado
+    del documento visible.
+
+    Q09ESUM=
+
+    Motivo de eliminación:
+    ████████████████████████
+
+    La palabra no corresponde con ningún
+    registro oficial conocido.
+*/
+
+/*
+    HOST COMPATIBILITY: CONFIRMED
+*/
+
+/*
+==================================================
+FIN DEL REGISTRO
+==================================================
+*/
+
+</script>
+
+</body>
+</html>
+```
