@@ -123,7 +123,7 @@ p {
 }
 
 /* =========================
-   AI IJICHI
+   Ai Ijichi
    ========================= */
 
 .subject-container {
@@ -151,12 +151,39 @@ p {
 
 .subject::before,
 .subject::after {
-    content: "AI IJICHI";
+    content: "Ai Ijichi";
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     opacity: 0;
+}
+
+.subject-glitch-message {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: max-content;
+    white-space: pre;
+    color: #ddd;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    animation: subjectMessageGlitch 6s infinite;
+}
+
+@keyframes subjectMessageGlitch {
+    0%, 68%, 69%, 70%, 100% {
+        opacity: 0;
+    }
+
+    68.5% {
+        opacity: 1;
+    }
+
+    69% {
+        opacity: 0;
+    }
 }
 
 .subject::before {
@@ -413,7 +440,8 @@ p {
     </div>
 
     <div class="subject">
-        AI IJICHI
+        Ai Ijichi
+        <span class="subject-glitch-message">I WOKE UP AGAIN AND I CANT SEE NOR BREATHE</span>
     </div>
 
 </div>
@@ -422,8 +450,8 @@ p {
 <p>
 
     Se solicitó verificar el estado de su domicilio familiar
-    debido a la ausencia recurrente de la estudiante durante
-    períodos no registrados en su agenda oficial.
+    por orden de la directora de Kyoto Jujutsu High, sus razones
+    al momento de la investigación son desconocidas.
 
 </p>
 
@@ -711,8 +739,8 @@ p {
 
     <br>
 
-    &gt; AI IJICHI / PRE-INCIDENT<br>
-    &gt; AI IJICHI / POST-INCIDENT<br>
+    &gt; Ai Ijichi / PRE-INCIDENT<br>
+    &gt; Ai Ijichi / POST-INCIDENT<br>
 
     <br>
 
@@ -819,7 +847,7 @@ console.log("%cARCHIVO IJ-0822-18", "color:#a44;font-size:20px;font-weight:bold"
 
 console.log("22/08/2018");
 
-console.log("AI IJICHI");
+console.log("Ai Ijichi");
 
 console.log("DAIKI GONDOU");
 
