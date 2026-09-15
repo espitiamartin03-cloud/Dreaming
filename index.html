@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dreaming</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+
+  /* ---- GIF GRID ---- */
+  .gif-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .gif-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: none;
+    outline: none;
+  }
+
+  /* ---- DVD-STYLE BOUNCING TITLE ---- */
+  #dvd-title {
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-family: "Comic Sans MS", "Comic Sans", cursive;
+    font-size: 48px;
+    font-weight: bold;
+    color: #ff3fa4;
+    text-shadow: 2px 2px 0 #000;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+    user-select: none;
+  }
+
+  /* ---- PLAY BUTTON (image only, no text) ---- */
+  #play-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    background-image: url("eye.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    z-index: 20;
+  }
+
+  #play-btn:focus {
+    outline: none;
+  }
+</style>
+</head>
+<body>
+
+  <!-- 6 GIFS FILLING THE SCREEN, NO BORDERS -->
+  <div class="gif-grid">
+    <img src="1.gif" alt="">
+    <img src="2.gif" alt="">
+    <img src="3.gif" alt="">
+    <img src="4.gif" alt="">
+    <img src="5.gif" alt="">
+    <img src="6.gif" alt="">
+  </div>
+
+  <!-- BOUNCING TITLE -->
+  <div id="dvd-title">Dreaming</div>
+
+  <!-- BACKGROUND SONG (plays automatically from the start) -->
+  <audio id="bg-song" src="song.mp3" loop autoplay></audio>
+
+  <!-- EYE BUTTON SOUND -->
+  <audio id="eye-sound" src="audio.wav"></audio>
+
+  <!-- PLAY/PAUSE BUTTON (image only) -->
+  <button id="play-btn" aria-label="Play sound"></button>
+
+  <script>
+    // ---- Background song: try to autoplay, and if the browser blocks it,
+    // start it on the very first user interaction anywhere on the page ----
+    const song = document.getElementById('bg-song');
+
+    song.play().catch(() => {
+      const startSongOnce = () => {
+        song.play();
+        document.removeEventListener('click', startSongOnce);
+        document.removeEventListener('keydown', startSongOnce);
+      };
+      document.addEventListener('click', startSongOnce);
+      document.addEventListener('keydown', startSongOnce);
+    });
+
+    // ---- Eye button plays/pauses its own sound (audio.wav) ----
+    const eyeSound = document.getElementById('eye-sound');
+    const playBtn = document.getElementById('play-btn');
+    let isPlaying = false;
+
+    playBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        eyeSound.pause();
+      } else {
+        eyeSound.currentTime = 0;
+        eyeSound.play();
+      }
+      isPlaying = !isPlaying;
+    });
+
+    eyeSound.addEventListener('ended', () => {
+      isPlaying = false;
+    });
+
+    // ---- DVD-logo style bounce for the title ----
+    const title = document.getElementById('dvd-title');
+
+    // random starting position
+    let x = Math.random() * (window.innerWidth - 300);
+    let y = Math.random() * (window.innerHeight - 60);
+
+    // random-ish starting speed/direction
+    let dx = 2.2;
+    let dy = 2.2;
+
+    function bounce() {
+      const rect = title.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      x += dx;
+      y += dy;
+
+      if (x <= 0) {
+        x = 0;
+        dx = -dx;
+      } else if (x + w >= window.innerWidth) {
+        x = window.innerWidth - w;
+        dx = -dx;
+      }
+
+      if (y <= 0) {
+        y = 0;
+        dy = -dy;
+      } else if (y + h >= window.innerHeight) {
+        y = window.innerHeight - h;
+        dy = -dy;
+      }
+
+      title.style.transform = `translate(${x}px, ${y}px)`;
+
+      requestAnimationFrame(bounce);
+    }
+
+    requestAnimationFrame(bounce);
+  </script>
+
+</body>
+</html>
